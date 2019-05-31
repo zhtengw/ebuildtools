@@ -1,6 +1,6 @@
 #!/bin/sh
 
-PKGLIST=${PKGLIST:-$PWD/deepin-pkg-list}
+PKGLIST=${PKGLIST:-$(dirname $0)/deepin-pkg-list}
 OVERLAYDIR=${OVERLAYDIR:-/var/lib/layman/deepin}
 
 function verinfo() {
@@ -58,7 +58,7 @@ function qtheaders() {
 }
 
 cd ${OVERLAYDIR}
-for pkg in `cat $PKGLIST`
+for pkg in `cat $PKGLIST | grep -v '#'`
 do
 	verinfo $pkg
 	verlt ${curVer} ${repoVer} && verBump

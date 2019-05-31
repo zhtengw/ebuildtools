@@ -44,7 +44,7 @@ dde-base/deepin-gettext-tools
 dde-base/deepin-wm-switcher
 dde-base/startdde
 dde-base/dde-api
-dde-base/deepin-desktop-base
+#dde-base/deepin-desktop-base
 dde-base/dde-control-center
 dde-base/deepin-wallpapers
 dde-base/deepin-menu
