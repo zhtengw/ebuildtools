@@ -34,9 +34,9 @@ function verlt() {
 function verBump() {
 	cp ${catalog}/${pkgname}-${curVer}*.ebuild ${catalog}/${pkgname}-${repoVer}.ebuild
 
-	ebuild ${catalog}/${pkgname}-${repoVer}.ebuild manifest || return
+	ebuild ${catalog}/${pkgname}-${repoVer}.ebuild manifest || return 2
 
-	ebuild ${catalog}/${pkgname}-${repoVer}.ebuild install || return
+	ebuild ${catalog}/${pkgname}-${repoVer}.ebuild install || return 3
 
 	ebuild ${catalog}/${pkgname}-${repoVer}.ebuild clean
 
@@ -66,6 +66,8 @@ for pkg in `cat $PKGLIST | grep -v '#'`
 do
 	verinfo $pkg
 	verlt ${curVer} ${repoVer} && verBump
+	# forward ebuild log to STDERR when build error
+	[[ $? == 3 ]] && cat /var/tmp/portage/${catalog}-${repoVer}/temp/build.log >> /dev/stderr 
 done
 
 qtheaders
