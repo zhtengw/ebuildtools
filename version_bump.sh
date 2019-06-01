@@ -11,7 +11,9 @@ function verinfo() {
 	catalog="$1"
 	pkgname=${catalog##*/}
 
-	curVer=$(ls ${catalog}/*.ebuild | xargs -l basename | sed -E 's/.*-([0-9]+[\.0-9+]*).*\.ebuild/\1/' | sort -r -V | head -n1)
+	# curVer=$(ls ${catalog}/*.ebuild | xargs -l basename | sed -E 's/.*-([0-9]+[\.0-9+]*).*\.ebuild/\1/' | sort -r -V | head -n1)
+	curVerEbuild=$(ls ${catalog}/*.ebuild | xargs -l basename | sort -r -V | head -n1)
+	curVer=$(echo ${curVerEbuild} | sed -E 's/.*-([0-9]+[\.0-9+]*).*\.ebuild/\1/') 
 
 	# github homepage
 	HOME=$(grep HOMEPAGE ${catalog}/${pkgname}-${curVer}*.ebuild  | sed -E 's/.*"(.*)".*/\1/' | head -n1)
@@ -32,7 +34,7 @@ function verlt() {
 }
 
 function verBump() {
-	cp ${catalog}/${pkgname}-${curVer}*.ebuild ${catalog}/${pkgname}-${repoVer}.ebuild
+	cp ${catalog}/${curVerEbuild} ${catalog}/${pkgname}-${repoVer}.ebuild
 
 	ebuild ${catalog}/${pkgname}-${repoVer}.ebuild manifest || return 2
 
@@ -52,7 +54,9 @@ function qtheaders() {
 	catalog="dev-qt/qtxcb-private-headers"
 	pkgname=${catalog##*/}
 
-	curVer=$(ls ${catalog}/*.ebuild | xargs -l basename | sed -E 's/.*-([0-9]+[\.0-9+]*).*\.ebuild/\1/' | sort -r -V | head -n1)
+	# curVer=$(ls ${catalog}/*.ebuild | xargs -l basename | sed -E 's/.*-([0-9]+[\.0-9+]*).*\.ebuild/\1/' | sort -r -V | head -n1)
+	curVerEbuild=$(ls ${catalog}/*.ebuild | xargs -l basename | sort -r -V | head -n1)
+	curVer=$(echo ${curVerEbuild} | sed -E 's/.*-([0-9]+[\.0-9+]*).*\.ebuild/\1/') 
 
 	repoVer=$(ls /usr/portage/dev-qt/qtcore/qtcore*.ebuild | xargs -l basename | sed -E 's/.*-([0-9]+[\.0-9+]*).*\.ebuild/\1/' | sort -r -V | head -n1)
 	
@@ -70,7 +74,7 @@ do
 	[[ $? == 3 ]] && cat /var/tmp/portage/${catalog}-${repoVer}/temp/build.log >> /dev/stderr 
 done
 
-qtheaders
+[[ ${OVERLAYDIR} == "/var/lib/layman/deepin" ]] && qtheaders
 
 [[ -n ${bumpMSG} ]] && git commit -m "Version bump: ${bumpMSG}"
 
