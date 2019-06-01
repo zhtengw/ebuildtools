@@ -1,7 +1,9 @@
 #!/bin/sh
 
-PKGLIST=${PKGLIST:-$(dirname $0)/deepin-pkg-list}
+PKGLIST=${PKGLIST:-$(cd $(dirname $0); pwd -P)/deepin-pkg-list}
 OVERLAYDIR=${OVERLAYDIR:-/var/lib/layman/deepin}
+
+bumpMSG=""
 
 function verinfo() {
 
@@ -40,7 +42,8 @@ function verBump() {
 
 	git add ${catalog}
 
-	git commit -m "Version bump: ${pkgname}-${repoVer}"
+	#git commit -m "Version bump: ${pkgname}-${repoVer}"
+	bumpMSG="${bumpMSG}${pkgname}-${repoVer}, "
 }
 
 # Special for dev-qt/qtxcb-private-headers
@@ -65,6 +68,8 @@ do
 done
 
 qtheaders
+
+[[ -n ${bumpMSG} ]] && git commit -m "Version bump: ${bumpMSG}"
 
 # TODO
 # 1 send mail when error 
