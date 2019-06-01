@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 PKGLIST=${PKGLIST:-$(cd $(dirname $0); pwd -P)/deepin-pkg-list}
 OVERLAYDIR=${OVERLAYDIR:-/var/lib/layman/deepin}
@@ -61,6 +61,7 @@ function qtheaders() {
 }
 
 cd ${OVERLAYDIR}
+# ignore packages command out by #
 for pkg in `cat $PKGLIST | grep -v '#'`
 do
 	verinfo $pkg
