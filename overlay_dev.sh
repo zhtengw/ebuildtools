@@ -75,7 +75,7 @@ function qtheaders() {
 			do
 				echo "${curVers}" | grep -q "${version}" 
 				if [[ "$?" != 0 ]]; then
-					cp ${catalog}/$(echo ${curVerEbuilds} | head -n1) ${catalog}/${pkgname}-${version}.ebuild
+					cp ${catalog}/$(echo "${curVerEbuilds}" | head -n1) ${catalog}/${pkgname}-${version}.ebuild
 
 					ebuild ${catalog}/${pkgname}-${version}.ebuild manifest
 
